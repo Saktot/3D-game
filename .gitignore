@@ -1,0 +1,33 @@
+# Unity: кэш и временные файлы
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+# Сборки игры
+[Bb]uild/
+[Bb]uilds/
+[Dd]ist/
+# IDE и редакторы кода
+.vs/
+.idea/
+.vscode/
+.gradle/
+# Временные файлы ОС
+.DS_Store
+Thumbs.db
+Desktop.ini
+# Временные файлы Visual Studio
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svclog
+# Резервные и временные файлы
+*.tmp
+*.bak
