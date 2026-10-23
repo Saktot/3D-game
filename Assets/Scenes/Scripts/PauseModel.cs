@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Amer
 {
-    public class PauseModel : MonoBehaviour
+    public class PauseModel
     {
         public bool IsPaused { get; private set; }
 
