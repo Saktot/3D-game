@@ -1,25 +1,25 @@
 using UnityEngine;
 using System;
 
-namespace Amer
-{
-    public class PlayerHealth : MonoBehaviour
-    {
+namespace Amer{
+    public class PlayerHealth : MonoBehaviour{
         [Header("Health Settings")]
         [SerializeField] private float maxHp = 100f;
         [SerializeField] private float currentHp;
 
         public float MaxHp => maxHp;
         public float CurrentHp => currentHp;
+        public bool IsDead => _isDead;
 
         public event Action<float, float> OnHealthChanged;
         public event Action OnDied;
 
         private bool _isDead;
 
-        private void Awake() {
+        private void Awake(){
             maxHp = Mathf.Max(1f, maxHp);
             currentHp = maxHp;
+            _isDead = false;
         }
 
         public void TakeDamage(float damage) {
@@ -30,7 +30,7 @@ namespace Amer
 
             OnHealthChanged?.Invoke(currentHp, maxHp);
 
-            if (currentHp <= 0f) {
+            if (currentHp <= 0f){
                 _isDead = true;
                 OnDied?.Invoke();
             }
