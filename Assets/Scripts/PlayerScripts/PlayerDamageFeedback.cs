@@ -9,6 +9,7 @@ namespace Amer{
         [Header("Damage Effect")]
         [SerializeField] private Color damageColor = Color.red;
         [SerializeField] private float flashDuration = 0.12f;
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
         private Color[] originalColors;
         private Coroutine flashRoutine;
@@ -24,7 +25,7 @@ namespace Amer{
             originalColors = new Color[playerRenderers.Length];
 
             for (int i = 0; i < playerRenderers.Length; i++)
-                originalColors[i] = playerRenderers[i].material.color;
+                originalColors[i] = GetRendererColor(playerRenderers[i]);
 
             if (playerHealth != null)
                 previousHealth = playerHealth.CurrentHp;
@@ -58,9 +59,6 @@ namespace Amer{
 
         private IEnumerator FlashRoutine() {
             SetColor(damageColor);
-
-            // Реальное время позволяет закончить эффект,
-            // даже если игра остановилась после смерти.
             yield return new WaitForSecondsRealtime(flashDuration);
 
             RestoreColors();
@@ -70,7 +68,7 @@ namespace Amer{
         private void SetColor(Color color){
             foreach (Renderer rend in playerRenderers) {
                 if (rend != null)
-                    rend.material.color = color;
+                    SetRendererColor(rend, color);
             }
         }
 
@@ -80,8 +78,22 @@ namespace Amer{
 
             for (int i = 0; i < playerRenderers.Length; i++) {
                 if (playerRenderers[i] != null)
-                    playerRenderers[i].material.color = originalColors[i];
+                    SetRendererColor(playerRenderers[i], originalColors[i]);
             }
+        }
+
+        private Color GetRendererColor(Renderer rend){
+            if (rend.material.HasProperty(BaseColorId))
+                return rend.material.GetColor(BaseColorId);
+
+            return rend.material.color;
+        }
+
+        private void SetRendererColor(Renderer rend, Color color){
+            if (rend.material.HasProperty(BaseColorId))
+                rend.material.SetColor(BaseColorId, color);
+            else
+                rend.material.color = color;
         }
     }
 }

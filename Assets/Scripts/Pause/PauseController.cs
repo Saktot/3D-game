@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Amer{
     public class PauseController : MonoBehaviour{
@@ -7,6 +8,10 @@ namespace Amer{
         [SerializeField] private PauseModel pauseModel;
         [SerializeField] private PauseView pauseView;
         [SerializeField] private DeathController deathController;
+        [SerializeField] private VictoryController victoryController;
+
+        [Header("Scenes")]
+        [SerializeField] private string mainMenuSceneName = "Main Menu";
 
         private void Awake(){
             Time.timeScale = 1f;
@@ -43,6 +48,8 @@ namespace Amer{
         public void TogglePause() {
             if (deathController != null && deathController.IsDead)
                 return;
+            if (victoryController != null && victoryController.IsVictory)
+                return;
             if (pauseModel == null)
                 return;
 
@@ -58,7 +65,13 @@ namespace Amer{
             pauseModel.SetPaused(false);
         }
 
-        private void HandlePauseChanged(bool isPaused) {
+        public void GoToMainMenu(){
+            Time.timeScale = 1f;
+
+            SceneManager.LoadScene(mainMenuSceneName);
+        }
+
+        private void HandlePauseChanged(bool isPaused){
             Time.timeScale = isPaused ? 0f : 1f;
 
             if (pauseView != null)

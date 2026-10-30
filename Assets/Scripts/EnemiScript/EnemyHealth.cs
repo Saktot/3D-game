@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace Amer{
     public class EnemyHealth : MonoBehaviour{
@@ -9,6 +10,10 @@ namespace Amer{
         private float currentHp;
 
         public float CurrentHp => currentHp;
+
+        // Общее событие для всех врагов: "какой-то враг умер".
+        // static - значит, подписаться можно, не зная конкретного врага (так делает счётчик убийств).
+        public static event Action<EnemyHealth> OnAnyEnemyDied;
 
         private void Awake(){
             currentHp = maxHp;
@@ -28,6 +33,7 @@ namespace Amer{
         }
 
         private void Die(){
+            OnAnyEnemyDied?.Invoke(this);
             Destroy(gameObject);
         }
     }

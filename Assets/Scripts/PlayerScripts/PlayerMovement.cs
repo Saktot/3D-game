@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Amer{
     public class PlayerMovement : MonoBehaviour {
@@ -8,7 +8,8 @@ namespace Amer{
         private PlayerInput _playerInput;
         private float _inputAxisX => _playerInput.InputAxisX;
         private float _inputAxisZ => _playerInput.InputAxisZ;
-        [field: SerializeField] private float walkSpeed = 3; 
+        [field: SerializeField] private float walkSpeed = 3;
+        [SerializeField] private float rotationSpeed = 720f;
 
         private void Awake() {
             if (rb == null)
@@ -28,6 +29,18 @@ namespace Amer{
             float moveSpeedZ = FixeMove(movement.z);
             
             rb.linearVelocity = new Vector3(moveSpeedX, rb.linearVelocity.y, moveSpeedZ);
+            RotateToMovement(movement);
+        }
+
+        private void RotateToMovement(Vector3 movement) {
+            if (movement.sqrMagnitude < 0.01f)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            Quaternion newRotation = Quaternion.RotateTowards(
+                rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+
+            rb.MoveRotation(newRotation);
         }
         private float FixeMove(float inputAxis) {
             return inputAxis * walkSpeed;
