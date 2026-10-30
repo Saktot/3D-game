@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2462510651490766427}
   - component: {fileID: 307014852461407887}
   - component: {fileID: 8327815260252423204}
+  - component: {fileID: 1994649537538267487}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -162,14 +163,23 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 512
-  searchDuration: 2
   moveSpeed: 4
-  stoppingDistance: 1.2
   attackRange: 1.5
   attackDamage: 10
   attackCooldown: 1.5
-  attackWindup: 0.4
-  recoveryDuration: 0.5
+--- !u!114 &1994649537538267487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557871984849389704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6804b91e43b7a4e43ae8638754d9e472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Amer.EnemyHealth
+  maxHp: 30
 --- !u!1 &6331033291407215134
 GameObject:
   m_ObjectHideFlags: 0
