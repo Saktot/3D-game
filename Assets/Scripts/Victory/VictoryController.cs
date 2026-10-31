@@ -7,9 +7,6 @@ namespace Amer{
         [SerializeField] private KillCounterController killCounterController;
         [SerializeField] private VictoryView victoryView;
 
-        [Header("Scenes")]
-        [SerializeField] private string mainMenuSceneName = "Main Menu";
-
         public bool IsVictory { get; private set; }
 
         private void Awake(){
@@ -48,9 +45,9 @@ namespace Amer{
             );
         }
 
-        public void GoToMainMenu(){
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(mainMenuSceneName);
+        // Кнопка "Выйти" в меню победы.
+        public void QuitGame(){
+            GameQuit.Quit();
         }
     }
 }

@@ -2,8 +2,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Amer{
-    public class PlayerAttack : MonoBehaviour{
+namespace Amer
+{
+    public class PlayerAttack : MonoBehaviour
+    {
         [Header("Attack")]
         [SerializeField] private float attackDamage = 10f;
         [SerializeField] private float attackCooldown = 1f;
@@ -14,6 +16,11 @@ namespace Amer{
         [Header("Combo")]
         [SerializeField] private int comboLength = 3;
         [SerializeField] private float comboResetTime = 1.5f;
+
+        [Header("Sound")]
+        [SerializeField] private AudioSource combatAudioSource;
+        [SerializeField] private AudioClip[] attackSounds;
+        [SerializeField] private AudioClip[] hitSounds;
 
         [Header("Enemy")]
         [SerializeField] private LayerMask enemyMask;
@@ -50,8 +57,10 @@ namespace Amer{
 
             nextAttackTime = Time.time + attackCooldown;
 
-            if (Time.time - lastAttackTime > comboResetTime || comboStep >= comboLength)
+            if (Time.time - lastAttackTime > comboResetTime ||
+                comboStep >= comboLength){
                 comboStep = 0;
+            }
 
             comboStep++;
             lastAttackTime = Time.time;
@@ -59,10 +68,12 @@ namespace Amer{
             if (playerAnimation != null)
                 playerAnimation.PlayAttack(comboStep);
 
+            PlayAttackSound();
+
             StartCoroutine(HitAfterDelay());
         }
 
-        private IEnumerator HitAfterDelay(){
+        private IEnumerator HitAfterDelay() {
             yield return new WaitForSeconds(hitDelay);
 
             if (playerHealth != null && playerHealth.IsDead)
@@ -71,9 +82,12 @@ namespace Amer{
             DealDamage();
         }
 
-        private void DealDamage(){
+        private void DealDamage()
+        {
             Vector3 attackPosition =
-                transform.position +transform.forward * attackDistance + Vector3.up * 0.5f;
+                transform.position +
+                transform.forward * attackDistance +
+                Vector3.up * 0.5f;
 
             Collider[] hits = Physics.OverlapSphere(
                 attackPosition,attackRadius,enemyMask);
@@ -84,14 +98,41 @@ namespace Amer{
 
                 if (enemy != null){
                     enemy.TakeDamage(attackDamage);
+                    PlayHitSound();
                     break;
                 }
             }
         }
 
+        private void PlayAttackSound(){
+            if (combatAudioSource == null ||
+                attackSounds == null ||
+                attackSounds.Length == 0)
+                return;
+
+            int index = Mathf.Clamp(comboStep - 1,0,attackSounds.Length - 1);
+
+            AudioClip clip = attackSounds[index];
+
+            if (clip != null)
+                combatAudioSource.PlayOneShot(clip);
+        }
+
+        private void PlayHitSound(){
+            if (combatAudioSource == null ||
+                hitSounds == null ||hitSounds.Length == 0)
+                return;
+
+            int index = Random.Range(0, hitSounds.Length);
+
+            AudioClip clip = hitSounds[index];
+
+            if (clip != null)
+                combatAudioSource.PlayOneShot(clip);
+        }
+
         private void OnDrawGizmosSelected(){
-            Vector3 attackPosition =
-                transform.position +
+            Vector3 attackPosition =transform.position +
                 transform.forward * attackDistance +
                 Vector3.up * 0.5f;
 

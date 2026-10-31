@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace Amer{
     public class PauseController : MonoBehaviour{
@@ -9,9 +8,7 @@ namespace Amer{
         [SerializeField] private PauseView pauseView;
         [SerializeField] private DeathController deathController;
         [SerializeField] private VictoryController victoryController;
-
-        [Header("Scenes")]
-        [SerializeField] private string mainMenuSceneName = "Main Menu";
+        [SerializeField] private SettingsController settingsController;
 
         private void Awake(){
             Time.timeScale = 1f;
@@ -65,10 +62,15 @@ namespace Amer{
             pauseModel.SetPaused(false);
         }
 
-        public void GoToMainMenu(){
-            Time.timeScale = 1f;
+        // Кнопка "Настройки" в меню паузы.
+        public void OpenSettings(){
+            if (settingsController != null)
+                settingsController.OpenSettings();
+        }
 
-            SceneManager.LoadScene(mainMenuSceneName);
+        // Кнопка "Выйти" в меню паузы.
+        public void QuitGame(){
+            GameQuit.Quit();
         }
 
         private void HandlePauseChanged(bool isPaused){
@@ -76,7 +78,10 @@ namespace Amer{
 
             if (pauseView != null)
                 pauseView.SetPauseVisible(isPaused);
+
+            // Закрыли паузу (например, клавишей Esc) - закрываем и настройки.
+            if (!isPaused && settingsController != null)
+                settingsController.CloseSettings();
         }
     }
 }
-
